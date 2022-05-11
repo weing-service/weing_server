@@ -1,7 +1,7 @@
 const VoteModel = require("../data/vote.js")
 
 // 투표 생성
-const createVote = (req, res) => {
+exports.createVote = (req, res) => {
   const { title, info } = req.body
   const voteDate = new Date(2022, 5, 16) // 임의로 설정
   const startTime = new Date(2022, 5, 16, 2, 0, 0) // 임의로 설정
@@ -27,7 +27,7 @@ const createVote = (req, res) => {
 }
 
 // 투표 수정 (항목 추가해야 함)
-const editVote = async (req, res) => {
+exports.editVote = async (req, res) => {
   const voteId = req.params.voteId
   const { title, info } = req.body
 
@@ -38,15 +38,9 @@ const editVote = async (req, res) => {
 }
 
 // 투표 삭제
-const delVote = async (req, res) => {
+exports.delVote = async (req, res) => {
   const voteId = req.params.voteId
   await VoteModel.findByIdAndDelete(voteId).then(() => {
     res.json({ message: "삭제 성공!" })
   })
-}
-
-module.exports = {
-  createVote,
-  editVote,
-  delVote,
 }

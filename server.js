@@ -1,18 +1,16 @@
 const express = require("express")
 const app = express()
-const voteRouter = require("./router/vote.js")
+const bodyParser = require("body-parser")
+const config = require("./config/key")
 
-// admin, weing25
-// mongodb+srv://admin:<password>@weing.jl8pj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+app.use(bodyParser.json())
+
 const mongoose = require("mongoose")
 mongoose
-  .connect(
-    "mongodb+srv://admin:weing25@weing.jl8pj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(config.mongoURI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("MongoDB Connected.."))
   .catch((err) => console.log(err))
 
@@ -20,9 +18,8 @@ app.listen(8080, function () {
   console.log("listening on 8080")
 })
 
-app.get("/", function (req, res) {
-  res.send("메인 페이지")
-})
+const scheduleRouter = require("./router/schedule")
+const voteRouter = require("./router/vote")
 
-app.use(express.json())
 app.use("/vote", voteRouter)
+app.use("/schedule", scheduleRouter)
