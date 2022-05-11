@@ -1,10 +1,13 @@
 const express = require('express');
 const app = express();
+const bodyParser = require("body-parser");
 
-// admin, weing25
-// mongodb+srv://admin:<password>@weing.jl8pj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority
+const config = require("./config/key");
+
+app.use(bodyParser.json())
+
 const mongoose= require('mongoose');
-mongoose.connect('mongodb+srv://admin:weing25@weing.jl8pj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority', {
+mongoose.connect(config.mongoURI, {
     useNewUrlParser: true,
     useUnifiedTopology: true
 }).then(() => console.log('MongoDB Connected..'))
@@ -14,6 +17,5 @@ app.listen(8080, function(){
     console.log('listening on 8080');
 });
 
-app.get('/', function(req, res){
-    res.send('메인 페이지');
-})
+const scheduleRouter = require('./router/schedule');
+app.use('/schedule', scheduleRouter);
