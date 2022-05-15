@@ -2,12 +2,7 @@ const VoteModel = require("../data/vote.js")
 
 // 투표 생성
 exports.createVote = (req, res) => {
-  const { title, info } = req.body
-  const voteDate = new Date(2022, 5, 16) // 임의로 설정
-  const startTime = new Date(2022, 5, 16, 2, 0, 0) // 임의로 설정
-  const endTime = new Date(2022, 5, 16, 5, 0, 0) // 임의로 설정
-  const finishDate = new Date(2022, 5, 23) // 임의로 설정
-
+  const { title, info, voteDate, startTime, endTime, finishDate } = req.body
   const isFinished = false
 
   if (!title) return res.status(400).send("제목을 입력해주세요!")
