@@ -11,10 +11,10 @@ const scheduleSchema = new Schema({
     length: 50,
   },
   startDate: {
-    type: Date,
+    type: String,
   },
   finishDate: {
-    type: Date,
+    type: String,
   },
   category: {
     type: String,
