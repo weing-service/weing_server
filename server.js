@@ -21,7 +21,9 @@ app.listen(8080, function () {
 const scheduleRouter = require("./router/schedule")
 const voteRouter = require("./router/vote")
 const projectRouter = require("./router/project")
+const authRouter = require("./router/auth")
 
 app.use("/vote", voteRouter)
 app.use("/schedule", scheduleRouter)
 app.use("/project", projectRouter)
+app.use('/auth', authRouter)
