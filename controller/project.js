@@ -19,15 +19,14 @@ exports.createProject = async (req, res) => {
   })
 }
 
-// 프로젝트 수정 (항목 추가해야 함)
+// 프로젝트 수정
 exports.editProject = async (req, res) => {
   const projectId = req.params.projectId
-  const { title, info } = req.body
-
-  const data = await ProjectModel.findById(projectId)
-
-  const edited = await data.overwrite({ title: title, info: info })
-  res.status(200).json(edited)
+  await ProjectModel.findByIdAndUpdate(projectId, req.body)
+    .then(() => {
+      res.json({ message: "수정 성공!" })
+    })
+    .catch((err) => res.status(500).send(err))
 }
 
 // 프로젝트 삭제
