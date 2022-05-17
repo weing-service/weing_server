@@ -17,5 +17,6 @@
     "nodemon": "^2.0.16",
     "passport": "^0.5.2",
     "passport-kakao": "^1.0.1"
+    "underscore": "^1.13.3"
   }
 }

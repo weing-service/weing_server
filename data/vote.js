@@ -8,9 +8,9 @@ const VoteSchema = new mongoose.Schema(
     startTime: Date,
     endTime: Date,
     finishDate: Date, // 필수, 디폴트 값 지정해야 함
-    isFinished: Boolean,
-    // intoCal: Boolean,
-    // category: String, // 투표 유형
+    intoCal: Boolean,
+    category: String, // 투표 유형
+    createdDate: Date, // 생성 날짜
   },
   { versionKey: false }
 )
