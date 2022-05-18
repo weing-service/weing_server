@@ -4,10 +4,11 @@ const passport = require('passport')
 const KakaoStrategy = require('passport-kakao').Strategy
 
 const User = require("../data/user")
+const config = require("./config/key")
 
 
 passport.use('kakao', new KakaoStrategy({
-    clientID: 'bac1c38075649192576b660431975eb4',
+    clientID: config.clientID,
     callbackURL: 'auth/kakao',   
 }, async (accessToken, refreshToken, profile, done) => {
 
@@ -40,7 +41,7 @@ passport.serializeUser((exUser, done) => {
 });
 
 passport.deserializeUser((user, done) => {
-    // user = {id : data.user.id, accessToken : data.accessToken}
+    // user = {id : exUser.id, accessToken : exUser.accessToken}
     User.findOne({ where: { id:user.id } })
     .then((result) => { // db에서 가져온 유저데이터 결과 result
         done(null, result); // req.user 에 저장된다.
