@@ -21,17 +21,14 @@ app.listen(8080, function () {
   console.log("listening on 8080")
 })
 
-passport.serializeUser((data, done) => {
-  done(null, {id : data.user.id, accessToken : data.accessToken})
-})
+passport.serializeUser((user, done) => {
+  done(null, user.id)
+});
 
-passport.deserializeUser((user, done) => {
-  User.findOne({ where: { id: user.id } })
-  .then((result) => { // db에서 가져온 유저데이터 결과 result
-    const tokenUser = { user: result, accessToken : user.accessToken}; 
-    done(null, tokenUser); // req.user 에 저장된다.
-  }) // 조회한 정보를 req.user에 저장한다.
-  .catch((error) => done(error));
+passport.deserializeUser((id, done) => {
+  User.findOne({ where: { id } }) 
+    .then(user => done(null, user)) 
+    .catch(err => done(err))
 });
 
 const scheduleRouter = require("./router/schedule")
