@@ -1,8 +1,10 @@
 const ProjectModel = require("../data/project.js")
 const ImageModel = require("../data/coverImg.js")
+const UserModel = require("../data/user.js")
 
 // 프로젝트 생성
 exports.createProject = async (req, res) => {
+  const users = []
   const { title, info, finishDate, coverImg } = req.body
   const imgFile = await ImageModel.findOne({ savedName: coverImg })
 
@@ -11,6 +13,7 @@ exports.createProject = async (req, res) => {
   new ProjectModel({
     title: title,
     info: info,
+    users: users,
     finishDate: finishDate,
     coverImg: imgFile,
   }).save((err, result) => {
@@ -63,4 +66,15 @@ exports.getProject = async (req, res) => {
   const projectId = req.params.projectId
   const data = await ProjectModel.findById(projectId)
   res.json(data)
+}
+
+// 참여자 추가
+exports.addUser = async (req, res) => {
+  const projectId = req.params.projectId
+  const userId = req.params.userId
+  const newUser = await UserModel.findById(userId)
+  const project = await ProjectModel.findByIdAndUpdate(projectId, {
+    $push: { users: newUser },
+  })
+  res.json({ message: "참여자 추가 완료!" })
 }
