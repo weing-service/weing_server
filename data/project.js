@@ -4,7 +4,7 @@ const ProjectSchema = new mongoose.Schema(
   {
     title: { type: String, required: true },
     info: String,
-    // users
+    users: Array,
     finishDate: Date,
     coverImg: Object,
   },
