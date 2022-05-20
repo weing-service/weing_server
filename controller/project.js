@@ -73,8 +73,19 @@ exports.addUser = async (req, res) => {
   const projectId = req.params.projectId
   const userId = req.params.userId
   const newUser = await UserModel.findById(userId)
-  const project = await ProjectModel.findByIdAndUpdate(projectId, {
+  await ProjectModel.findByIdAndUpdate(projectId, {
     $push: { users: newUser },
   })
   res.json({ message: "참여자 추가 완료!" })
+}
+
+// 참여자 삭제
+exports.delUser = async (req, res) => {
+  const projectId = req.params.projectId
+  // const userId = req.params.userId
+  const username = req.params.username
+  const data = await ProjectModel.findByIdAndUpdate(projectId, {
+    $pull: { users: { username: username } },
+  })
+  res.json({ message: "참여자 삭제 완료!" })
 }
