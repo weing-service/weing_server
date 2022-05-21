@@ -13,7 +13,7 @@ passport.use('kakao', new KakaoStrategy({
     callbackURL: '/auth/kakao/callback',
 }, async (accessToken, refreshToken, profile, done) => { // oAuth2
     try {
-        const exUser = await User.findOne({ where: { id: profile.id, provider: 'kakao' } }) // 카카오로 이미 가입되어있는 인원이 있나 확인한다.
+        const exUser = await User.findOne({ id: profile.id, provider: 'kakao' } ) // 카카오로 이미 가입되어있는 인원이 있나 확인한다.
         if (exUser) {
             done(null, exUser)
         } else {
