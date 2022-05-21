@@ -1,10 +1,10 @@
 const express = require("express")
 const app = express()
-const passport = require('passport')
-const session = require('express-session')
+const passport = require("passport")
+const session = require("express-session")
 const bodyParser = require("body-parser")
 const config = require("./config/key")
-const User = require('./data/user')
+const User = require("./data/user")
 
 app.use(bodyParser.json())
 
@@ -23,26 +23,25 @@ app.listen(8080, function () {
 
 passport.serializeUser((user, done) => {
   done(null, user.id)
-});
+})
 
 passport.deserializeUser((id, done) => {
-  User.findOne({ where: { id } }) 
-    .then(user => done(null, user)) 
-    .catch(err => done(err))
-});
+  User.findOne({ where: { id } })
+    .then((user) => done(null, user))
+    .catch((err) => done(err))
+})
 
 const scheduleRouter = require("./router/schedule")
 const voteRouter = require("./router/vote")
 const projectRouter = require("./router/project")
 const authRouter = require("./router/auth")
 
-app.use(session({ secret: 'secret', resave: true, saveUninitialized: false }))
+app.use(session({ secret: "secret", resave: true, saveUninitialized: false }))
 
 app.use(passport.initialize())
 app.use(passport.session())
 
-
 app.use("/vote", voteRouter)
 app.use("/schedule", scheduleRouter)
 app.use("/project", projectRouter)
-app.use('/auth', authRouter)
+app.use("/auth", authRouter)
