@@ -42,9 +42,9 @@ exports.delProject = async (req, res) => {
   })
 }
 
-// 커버 이미지 등록
-exports.coverImg = async (req, res) => {
-  const image = req.file.path
+// 프로필 이미지 등록
+exports.profileImg = async (req, res) => {
+  const profileImage = req.file.path
   const data = req.file
   console.log(data)
 
@@ -53,12 +53,35 @@ exports.coverImg = async (req, res) => {
     serverFileName: data.filename,
     savedName: data.originalname + Date.now(),
     size: data.size,
+    category: "profileImg",
   }).save((err, result) => {
     if (err) return res.status(500).send(err)
     res.status(201).json(result)
   })
 
-  if (image === undefined) {
+  if (profileImage === undefined) {
+    return res.status(400).json({ message: "undefined" })
+  }
+}
+
+// 커버 이미지 등록
+exports.coverImg = async (req, res) => {
+  const coverImage = req.file.path
+  const data = req.file
+  console.log(data)
+
+  new ImageModel({
+    originalFileName: data.originalname,
+    serverFileName: data.filename,
+    savedName: data.originalname + Date.now(),
+    size: data.size,
+    category: "coverImg",
+  }).save((err, result) => {
+    if (err) return res.status(500).send(err)
+    res.status(201).json(result)
+  })
+
+  if (coverImage === undefined) {
     return res.status(400).json({ message: "undefined" })
   }
 }
