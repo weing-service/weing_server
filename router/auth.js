@@ -7,15 +7,6 @@ const User = require("../data/user")
 
 const config = require("../config/key")
 
-<<<<<<< HEAD
-
-passport.use('kakao', new KakaoStrategy({
-    clientID: config.clientID,
-    callbackURL: '/auth/kakao/callback',
-}, async (accessToken, refreshToken, profile, done) => { // oAuth2
-    try {
-        const exUser = await User.findOne({ id: profile.id, provider: 'kakao' } ) // 카카오로 이미 가입되어있는 인원이 있나 확인한다.
-=======
 passport.use(
   "kakao",
   new KakaoStrategy(
@@ -30,10 +21,8 @@ passport.use(
           id: profile.id,
           provider: "kakao",
         }) // 카카오로 이미 가입되어있는 인원이 있나 확인한다.
->>>>>>> 5c5e2056d50ddb20761dc9432b903b3659a54f1c
         if (exUser) {
           done(null, exUser)
-          console.log("설마?")
         } else {
           const newUser = await User.create({
             id: profile.id,
@@ -54,6 +43,7 @@ passport.use(
 )
 
 router.get("/logout", loginCtrl.isLoggedIn, (req, res) => {
+  console.log(req.session.passport.user)
   req.logout()
   req.session.destroy()
   res.redirect("/")
