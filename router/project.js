@@ -2,6 +2,8 @@ const express = require("express")
 const router = express.Router()
 const multer = require("multer")
 const projectCtrl = require("../controller/project.js")
+const loginCtrl = require("../controller/middlewares")
+const passport = require('passport')
 const upload = multer({
   dest: "uploads/",
 })

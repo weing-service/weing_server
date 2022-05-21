@@ -58,6 +58,10 @@ router.get(
   }),
   (req, res) => {
     res.redirect("/")
+    console.log('로그인 성공')
+    console.log(req.session.passport.user)
+    passport.session.id = req.session.passport.user
+    console.log(passport.session.id)
   }
 )
 
