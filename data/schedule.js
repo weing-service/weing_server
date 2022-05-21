@@ -3,7 +3,7 @@ const { Schema } = mongoose
 
 const scheduleSchema = new Schema({
   project: {
-    type: String
+    type: String,
   },
   title: {
     type: String,
@@ -28,6 +28,7 @@ const scheduleSchema = new Schema({
   repeated: {
     type: Boolean,
   },
+  isCompleted: Boolean,
 })
 
 module.exports = mongoose.model("schedule", scheduleSchema)

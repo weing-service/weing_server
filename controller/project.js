@@ -1,6 +1,8 @@
 const ProjectModel = require("../data/project.js")
 const ImageModel = require("../data/coverImg.js")
 const UserModel = require("../data/user.js")
+const ScheduleModel = require("../data/schedule.js")
+const schedule = require("../data/schedule.js")
 
 // 프로젝트 생성
 exports.createProject = async (req, res) => {
@@ -88,4 +90,24 @@ exports.delUser = async (req, res) => {
     $pull: { users: { username: username } },
   })
   res.json({ message: "참여자 삭제 완료!" })
+}
+
+// 예정된 일정 개수, 완료된 일정 개수 가져오기
+exports.countSchedule = async (req, res) => {
+  const date = req.params.date
+  const project = req.params.project
+  const appointedCount = await ScheduleModel.countDocuments({
+    project: project,
+    startDate: date,
+    isCompleted: false,
+  })
+  const completedCount = await ScheduleModel.count({
+    project: project,
+    startDate: date,
+    isCompleted: true,
+  })
+  res.json([
+    { appointedCount: appointedCount },
+    { completedCount: completedCount },
+  ])
 }
