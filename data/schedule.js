@@ -2,6 +2,9 @@ const mongoose = require("mongoose")
 const { Schema } = mongoose
 
 const scheduleSchema = new Schema({
+  project: {
+    type: String
+  },
   title: {
     type: String,
     length: 10,

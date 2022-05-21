@@ -2,9 +2,10 @@ const Schedule = require("../data/schedule")
 
 // 일정 생성
 exports.scheduleSave = async (req, res) => {
-    const { title, info, startDate, finishDate, category, intoCal, repeated } = req.body
+    const {project, title, info, startDate, finishDate, category, intoCal, repeated } = req.body
     new Schedule({
-        title,
+        project, //프로젝트 명
+        title, //일정 제목
         info,
         startDate,
         finishDate,
