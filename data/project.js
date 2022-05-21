@@ -7,6 +7,7 @@ const ProjectSchema = new mongoose.Schema(
     users: Array,
     finishDate: Date,
     coverImg: Object,
+    profileImg: Object,
   },
   { versionKey: false }
 )

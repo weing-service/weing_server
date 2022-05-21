@@ -6,6 +6,7 @@ const imgSchema = new mongoose.Schema(
     serverFileName: String,
     savedName: String,
     size: Number,
+    category: String,
   },
   { versionKey: false }
 )

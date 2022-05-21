@@ -8,8 +8,13 @@ const upload = multer({
   dest: "uploads/",
 })
 
-router.post("/coverImg", upload.single("image"), projectCtrl.coverImg) // 커버 이미지 등록
-router.post("/project", projectCtrl.createProject) // 프로젝트 생성
+router.post(
+  "/profileImg",
+  upload.single("profileImage"),
+  projectCtrl.profileImg
+) // 프로젝트 프로필 이미지 등록
+router.post("/coverImg", upload.single("coverImage"), projectCtrl.coverImg) // 커버 이미지 등록
+router.post("/", projectCtrl.createProject) // 프로젝트 생성
 router.put("/:projectId", projectCtrl.editProject) // 프로젝트 수정
 router.delete("/:projectId", projectCtrl.delProject) // 프로젝트 삭제
 router.get("/:projectId", projectCtrl.getProject) // 프로젝트 하나 불러오기
