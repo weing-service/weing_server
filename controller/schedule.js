@@ -1,51 +1,58 @@
 const Schedule = require("../data/schedule")
+const loginCtrl = require("./middlewares")
 
 // 일정 생성
 exports.scheduleSave = async (req, res) => {
-  const {
-    project,
-    title,
-    info,
-    startDate,
-    finishDate,
-    category,
-    intoCal,
-    repeated,
-  } = req.body
-  const isCompleted = false
-  new Schedule({
-    project, //프로젝트 명
-    title, //일정 제목
-    info,
-    startDate,
-    finishDate,
-    category,
-    intoCal,
-    repeated,
-    isCompleted,
-  }).save((err, result) => {
-    if (err) return res.status(500).send(err)
-    res.status(201).json(result)
-  })
+  if(loginCtrl.isLoggedIn){
+    const {
+      project,
+      title,
+      info,
+      startDate,
+      finishDate,
+      category,
+      intoCal,
+      repeated,
+    } = req.body
+    const isCompleted = false
+    new Schedule({
+      project, //프로젝트 명
+      title, //일정 제목
+      info,
+      startDate,
+      finishDate,
+      category,
+      intoCal,
+      repeated,
+      isCompleted,
+    }).save((err, result) => {
+      if (err) return res.status(500).send(err)
+      res.status(201).json(result)
+    })
+  }
 }
 
 // 일정 삭제
 exports.scheduleDelete = async (req, res) => {
-  const scheduleId = req.params.scheduleId
-  await Schedule.findByIdAndDelete(scheduleId)
-    .then(() => {
-      res.json({ message: "삭제 성공!" })
-    })
-    .catch((err) => res.status(500).send(err))
+  if(loginCtrl.isLoggedIn){
+    const scheduleId = req.params.scheduleId
+    await Schedule.findByIdAndDelete(scheduleId)
+      .then(() => {
+        res.json({ message: "삭제 성공!" })
+      })
+      .catch((err) => res.status(500).send(err))
+    }
 }
 
 // 일정 수정
 exports.scheduleUpdate = async (req, res) => {
-  await Schedule.findByIdAndUpdate(req.params.scheduleId, req.body)
-    .then(() => {
-      res.json({ message: "수정 성공!" })
-    })
-    .catch((err) => res.status(500).send(err))
+  if(loginCtrl.isLoggedIn){
+    await Schedule.findByIdAndUpdate(req.params.scheduleId, req.body)
+      .then(() => {
+        res.json({ message: "수정 성공!" })
+      })
+      .catch((err) => res.status(500).send(err))
+    }
 }
 
 // 일정 1개 불러오기
@@ -71,7 +78,9 @@ exports.scheduleAll = async (req, res) => {
 
 // 일정 완료
 exports.complete = async (req, res) => {
-  const scheduleId = req.params.scheduleId
-  await Schedule.findByIdAndUpdate(scheduleId, { isCompleted: true })
-  res.json({ message: "일정 완료!" })
+  if(loginCtrl.isLoggedIn){
+    const scheduleId = req.params.scheduleId
+    await Schedule.findByIdAndUpdate(scheduleId, { isCompleted: true })
+    res.json({ message: "일정 완료!" })
+  }
 }
