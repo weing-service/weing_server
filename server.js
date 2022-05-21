@@ -35,6 +35,7 @@ const scheduleRouter = require("./router/schedule")
 const voteRouter = require("./router/vote")
 const projectRouter = require("./router/project")
 const authRouter = require("./router/auth")
+const req = require("express/lib/request")
 
 app.use(session({ secret: "secret", resave: true, saveUninitialized: false }))
 

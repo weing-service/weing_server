@@ -23,7 +23,6 @@ passport.use(
         }) // 카카오로 이미 가입되어있는 인원이 있나 확인한다.
         if (exUser) {
           done(null, exUser)
-          console.log("설마?")
         } else {
           const newUser = await User.create({
             id: profile.id,
@@ -44,6 +43,7 @@ passport.use(
 )
 
 router.get("/logout", loginCtrl.isLoggedIn, (req, res) => {
+  console.log(req.session.passport.user)
   req.logout()
   req.session.destroy()
   res.redirect("/")
