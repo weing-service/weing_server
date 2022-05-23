@@ -6,7 +6,8 @@ const VoteSchema = new mongoose.Schema(
         vote_title: String, // 투표 제목
         user_id: Number,
         vote_time: Array, // 투표한 시간
-        vote_place: Array // 투표한 장소
+        x: Number, // 경도
+        y: Number // 위도
     }
 )
 
