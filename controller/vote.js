@@ -1,5 +1,6 @@
 const VoteModel = require("../data/vote.js")
 const UserModel = require("../data/user")
+const Vote_infoModel = require("../data/voteinfo")
 const loginCtrl = require("./middlewares")
 const passport = require('passport')
 const _ = require("underscore")
@@ -70,9 +71,21 @@ exports.getVote = async (req, res) => {
   res.json(data)
 }
 
-// 투표하기 - 수정 필요
-exports.doVote = (req, res) => {
-  const { user1, user2, user3 } = req.body
-  const data = _.intersection(user1, user2, user3)
-  res.json(data)
+// 투표하기
+exports.doVote = async(req, res) => {
+  // req: 프로젝트 이름, 투표 이름, 투표시간(array), 투표장소(array)
+  if(loginCtrl.isLoggedIn){
+    console.log(passport.session.id)
+    new Vote_infoModel({
+      project_title: req.body.project_title,
+      vote_title: req.body.vote_title, // 투표 제목
+      user_id: passport.session.id,
+      vote_time: req.body.vote_time, // 투표한 시간
+      x: req.body.x, // 경도
+      y: req.body.y //위도      
+    }).save((err, result) => {
+      if (err) return res.status(500).send(err)
+      res.status(201).json(result)
+    })
+  }
 }
