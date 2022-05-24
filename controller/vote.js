@@ -72,19 +72,40 @@ exports.getVote = async (req, res) => {
 
 // 투표하기
 exports.doVote = async (req, res) => {
-  // req: 프로젝트 이름, 투표 이름, 투표시간(array), 투표장소(array)
+  // req: 프로젝트 이름, 투표 이름, 투표시간(array), 투표장소(array), 몇차 투표인지(number)
   if (loginCtrl.isLoggedIn) {
     console.log(passport.session.id)
-    new Vote_infoModel({
-      project_title: req.body.project_title,
-      vote_title: req.body.vote_title, // 투표 제목
-      user_id: passport.session.id,
-      vote_time: req.body.vote_time, // 투표한 시간
-      x: req.body.x, // 경도
-      y: req.body.y, //위도
-    }).save((err, result) => {
-      if (err) return res.status(500).send(err)
-      res.status(201).json(result)
+    await Vote_infoModel.find({
+      user_id : passport.session.id,
+      vote_count : req.body.vote_count
+    }).then ((exVote) => {
+      if (!exVote){
+        new Vote_infoModel({
+          project_title: req.body.project_title,
+          vote_title: req.body.vote_title, // 투표 제목
+          user_id: passport.session.id,
+          vote_time: req.body.vote_time, // 투표한 시간
+          x: req.body.x, // 경도
+          y: req.body.y, //위도
+        }).save((err, result) => {
+          if (err) return res.status(500).send(err)
+          res.status(201).json(result)
+        })
+      } else{
+        return res.json({ message: "이미 투표 완료한 사용자입니다."})
+      }
     })
   }
+}
+
+exports.again_vote = async (req, res) => {
+  await Vote_infoModel.find({ 
+    project_title : req.body.project_title,
+    vote_title : req.body.vote_title,
+    vote_count : req.body.vote_count
+    }).then((editVote) => {
+        if (!editVote) return res.json({ message: "해당 투표 없음" })
+        console.log(editVote)
+      })
+      .catch((err) => res.status(500).send(err))
 }
