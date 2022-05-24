@@ -1,6 +1,7 @@
 const VoteModel = require("../data/vote.js")
 const UserModel = require("../data/user")
 const Vote_infoModel = require("../data/voteinfo")
+const ProjectModel = require("../data/project")
 const loginCtrl = require("./middlewares")
 const passport = require("passport")
 const _ = require("underscore")
@@ -85,6 +86,7 @@ exports.doVote = async (req, res) => {
           vote_title: req.body.vote_title, // 투표 제목
           vote_count: req.body.vote_count,
           user_id: passport.session.id,
+          user_id: req.body.user_id,
           vote_time: req.body.vote_time, // 투표한 시간
           x: req.body.x, // 경도
           y: req.body.y, //위도
@@ -92,21 +94,53 @@ exports.doVote = async (req, res) => {
           if (err) return res.status(500).send(err)
           res.status(201).json(result)
         })
-      } else{
-        return res.json({ message: "이미 투표 완료한 사용자입니다."})
+      } else {
+        return res.json({ message: "이미 투표 완료한 사용자입니다." })
       }
     })
   }
 }
 
 exports.again_vote = async (req, res) => {
-  await Vote_infoModel.find({ 
-    project_title : req.body.project_title,
-    vote_title : req.body.vote_title,
-    vote_count : req.body.vote_count
-    }).then((editVote) => {
-        if (!editVote) return res.json({ message: "해당 투표 없음" })
-        console.log(editVote)
-      })
-      .catch((err) => res.status(500).send(err))
+  await Vote_infoModel.find({
+    project_title: req.body.project_title,
+    vote_title: req.body.vote_title,
+    vote_count: req.body.vote_count,
+  })
+    .then((editVote) => {
+      if (!editVote) return res.json({ message: "해당 투표 없음" })
+      console.log(editVote)
+    })
+    .catch((err) => res.status(500).send(err))
+}
+
+// 중간 지점 찾기
+exports.midPoint = async (req, res) => {
+  const x_array = []
+  const y_array = []
+  let x_sum = 0
+  let y_sum = 0
+  const project = await ProjectModel.findOne({
+    title: req.params.title,
+  })
+  const user_array = project.users
+  for (const user of user_array) {
+    const data = await Vote_infoModel.find({
+      user_id: user.id,
+    })
+    x_array.push(data[0].x)
+    y_array.push(data[0].y)
+  }
+
+  for (let i = 0; i < x_array.length; i++) {
+    x_sum += x_array[i]
+  }
+
+  for (let i = 0; i < y_array.length; i++) {
+    y_sum += y_array[i]
+  }
+
+  const x_average = x_sum / x_array.length
+  const y_average = y_sum / y_array.length
+  res.json({ x_average: x_average, y_average: y_average })
 }
