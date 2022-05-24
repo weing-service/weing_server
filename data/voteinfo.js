@@ -1,9 +1,10 @@
 const mongoose = require("mongoose")
 
-const VoteSchema = new mongoose.Schema(
+const Vote_infoSchema = new mongoose.Schema(
     {
         project_title: String,
         vote_title: String, // 투표 제목
+        vote_count: Number,
         user_id: Number,
         vote_time: Array, // 투표한 시간
         x: Number, // 경도
@@ -11,4 +12,4 @@ const VoteSchema = new mongoose.Schema(
     }
 )
 
-module.exports = mongoose.model("vote_info", VoteSchema)
+module.exports = mongoose.model("vote_info", Vote_infoSchema)
