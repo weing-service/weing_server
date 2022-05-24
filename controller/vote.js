@@ -5,6 +5,7 @@ const ProjectModel = require("../data/project")
 const loginCtrl = require("./middlewares")
 const passport = require("passport")
 const _ = require("underscore")
+const { type } = require("express/lib/response")
 
 // 투표 생성
 exports.createVote = async (req, res) => {
@@ -86,7 +87,6 @@ exports.doVote = async (req, res) => {
           vote_title: req.body.vote_title, // 투표 제목
           vote_count: req.body.vote_count,
           user_id: passport.session.id,
-          user_id: req.body.user_id,
           vote_time: req.body.vote_time, // 투표한 시간
           x: req.body.x, // 경도
           y: req.body.y, //위도
@@ -101,17 +101,25 @@ exports.doVote = async (req, res) => {
   }
 }
 
-exports.again_vote = async (req, res) => {
+exports.commonTime = async (req, res) => {
   await Vote_infoModel.find({
     project_title: req.body.project_title,
     vote_title: req.body.vote_title,
     vote_count: req.body.vote_count,
   })
-    .then((editVote) => {
-      if (!editVote) return res.json({ message: "해당 투표 없음" })
-      console.log(editVote)
-    })
-    .catch((err) => res.status(500).send(err))
+  .then((result) => {
+    if (!result) return res.json({ message: "해당 투표 없음" })
+    console.log(typeof(Object.values(result[0]['vote_time'])))
+    console.log(Object.values(result[0]['vote_time']))
+    let time1 = result[0]['vote_time'].values()
+    for (let i = 1; i < result.length; i++){
+
+      time1 = intersection
+    }
+    console.log(intersection)
+    return res.json(result)
+  })
+  .catch((err) => res.status(500).send(err))
 }
 
 // 중간 지점 찾기
