@@ -9,8 +9,9 @@ exports.createProject = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
     console.log("로그인한 유저")
     const users = []
-    const { title, info, finishDate, coverImg } = req.body
-    const imgFile = await ImageModel.findOne({ savedName: coverImg })
+    const { title, info, finishDate, coverImg, profileImg } = req.body
+    const coverImage = await ImageModel.findOne({ savedName: coverImg })
+    const profileImage = await ImageModel.findOne({ savedName: profileImg })
 
     if (!title) return res.status(400).send("제목을 입력해주세요!")
 
@@ -19,7 +20,8 @@ exports.createProject = async (req, res) => {
       info: info,
       users: users,
       finishDate: finishDate,
-      coverImg: imgFile,
+      coverImg: coverImage,
+      profileImg: profileImage,
     }).save((err, result) => {
       if (err) return res.status(500).send(err)
       res.status(201).json(result)
