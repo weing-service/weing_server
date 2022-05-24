@@ -4,8 +4,6 @@ const Vote_infoModel = require("../data/voteinfo")
 const ProjectModel = require("../data/project")
 const loginCtrl = require("./middlewares")
 const passport = require("passport")
-const _ = require("underscore")
-const { type } = require("express/lib/response")
 
 // 투표 생성
 exports.createVote = async (req, res) => {
@@ -78,10 +76,10 @@ exports.doVote = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
     console.log(passport.session.id)
     await Vote_infoModel.findOne({
-      user_id : passport.session.id,
-      vote_count : req.body.vote_count
-    }).then ((exVote) => {
-      if (!exVote){
+      user_id: passport.session.id,
+      vote_count: req.body.vote_count,
+    }).then((exVote) => {
+      if (!exVote) {
         new Vote_infoModel({
           project_title: req.body.project_title,
           vote_title: req.body.vote_title, // 투표 제목
@@ -101,26 +99,6 @@ exports.doVote = async (req, res) => {
   }
 }
 
-exports.commonTime = async (req, res) => {
-  await Vote_infoModel.find({
-    project_title: req.body.project_title,
-    vote_title: req.body.vote_title,
-    vote_count: req.body.vote_count,
-  })
-  .then((result) => {
-    if (!result) return res.json({ message: "해당 투표 없음" })
-    console.log(typeof(Object.values(result[0]['vote_time'])))
-    console.log(Object.values(result[0]['vote_time']))
-    let time1 = result[0]['vote_time'].values()
-    for (let i = 1; i < result.length; i++){
-
-      time1 = intersection
-    }
-    console.log(intersection)
-    return res.json(result)
-  })
-  .catch((err) => res.status(500).send(err))
-}
 
 // 중간 지점 찾기
 exports.midPoint = async (req, res) => {
@@ -151,4 +129,27 @@ exports.midPoint = async (req, res) => {
   const x_average = x_sum / x_array.length
   const y_average = y_sum / y_array.length
   res.json({ x_average: x_average, y_average: y_average })
+}
+
+// 중복 시간대 찾기
+exports.commonTime = async (req, res) => {
+  const votedata = await Vote_infoModel.find({
+    project_title: req.body.project_title,
+    vote_title: req.body.vote_title,
+    vote_count: req.body.vote_count,
+  })
+  const times = []
+  let result = []
+
+  for (const vote of votedata) {
+    times.push(vote.vote_time)
+  }
+  console.log(times)
+  console.log(votedata.length)
+
+  for (let i = 0; i < votedata.length - 1; i++) {
+    result = times[i].filter((x) => times[i + 1].includes(x))
+  }
+
+  res.json(result)
 }
