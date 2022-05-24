@@ -76,14 +76,15 @@ exports.doVote = async (req, res) => {
   // req: 프로젝트 이름, 투표 이름, 투표시간(array), 투표장소(array), 몇차 투표인지(number)
   if (loginCtrl.isLoggedIn) {
     console.log(passport.session.id)
-    await Vote_infoModel.find({
-      user_id: passport.session.id,
-      vote_count: req.body.vote_count,
-    }).then((exVote) => {
-      if (!exVote) {
+    await Vote_infoModel.findOne({
+      user_id : passport.session.id,
+      vote_count : req.body.vote_count
+    }).then ((exVote) => {
+      if (!exVote){
         new Vote_infoModel({
           project_title: req.body.project_title,
           vote_title: req.body.vote_title, // 투표 제목
+          vote_count: req.body.vote_count,
           user_id: passport.session.id,
           user_id: req.body.user_id,
           vote_time: req.body.vote_time, // 투표한 시간
