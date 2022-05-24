@@ -4,7 +4,6 @@ const Vote_infoModel = require("../data/voteinfo")
 const ProjectModel = require("../data/project")
 const loginCtrl = require("./middlewares")
 const passport = require("passport")
-const _ = require("underscore")
 
 // 투표 생성
 exports.createVote = async (req, res) => {
@@ -77,16 +76,15 @@ exports.doVote = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
     console.log(passport.session.id)
     await Vote_infoModel.findOne({
-      user_id : passport.session.id,
-      vote_count : req.body.vote_count
-    }).then ((exVote) => {
-      if (!exVote){
+      user_id: passport.session.id,
+      vote_count: req.body.vote_count,
+    }).then((exVote) => {
+      if (!exVote) {
         new Vote_infoModel({
           project_title: req.body.project_title,
           vote_title: req.body.vote_title, // 투표 제목
           vote_count: req.body.vote_count,
           user_id: passport.session.id,
-          user_id: req.body.user_id,
           vote_time: req.body.vote_time, // 투표한 시간
           x: req.body.x, // 경도
           y: req.body.y, //위도
@@ -143,4 +141,24 @@ exports.midPoint = async (req, res) => {
   const x_average = x_sum / x_array.length
   const y_average = y_sum / y_array.length
   res.json({ x_average: x_average, y_average: y_average })
+}
+
+// 중복 시간대 찾기
+exports.commonTime = async (req, res) => {
+  const vote_count = req.body.vote_count
+  const votedata = await Vote_infoModel.find({ vote_count: vote_count })
+  const times = []
+  let result = []
+
+  for (const vote of votedata) {
+    times.push(vote.vote_time)
+  }
+  console.log(times)
+  console.log(votedata.length)
+
+  for (let i = 0; i < votedata.length - 1; i++) {
+    result = times[i].filter((x) => times[i + 1].includes(x))
+  }
+
+  res.json(result)
 }
