@@ -145,8 +145,11 @@ exports.midPoint = async (req, res) => {
 
 // 중복 시간대 찾기
 exports.commonTime = async (req, res) => {
-  const vote_count = req.body.vote_count
-  const votedata = await Vote_infoModel.find({ vote_count: vote_count })
+  const votedata = await Vote_infoModel.find({
+    project_title: req.body.project_title,
+    vote_title: req.body.vote_title,
+    vote_count: req.body.vote_count,
+  })
   const times = []
   let result = []
 
