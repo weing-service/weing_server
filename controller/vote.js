@@ -99,18 +99,6 @@ exports.doVote = async (req, res) => {
   }
 }
 
-exports.again_vote = async (req, res) => {
-  await Vote_infoModel.find({
-    project_title: req.body.project_title,
-    vote_title: req.body.vote_title,
-    vote_count: req.body.vote_count,
-  })
-    .then((editVote) => {
-      if (!editVote) return res.json({ message: "해당 투표 없음" })
-      console.log(editVote)
-    })
-    .catch((err) => res.status(500).send(err))
-}
 
 // 중간 지점 찾기
 exports.midPoint = async (req, res) => {
