@@ -12,12 +12,11 @@ exports.scheduleSave = async (req, res) => {
       startDate,
       finishDate,
       category,
+      color,
       intoCal,
-      repeated,
       users
     } = req.body
     const place = ""
-    const isCompleted = false
     new Schedule({
       project, //프로젝트 명
       title, //일정 제목
@@ -26,9 +25,8 @@ exports.scheduleSave = async (req, res) => {
       finishDate,
       place,
       category,
+      color,
       intoCal,
-      repeated,
-      isCompleted,
       users
     }).save((err, result) => {
       if (err) return res.status(500).send(err)
@@ -64,11 +62,10 @@ exports.scheduleUpdate = async (req, res) => {
         finishDate: req.body.finishDate,
         place: req.body.place,
         category: req.body.category,
+        color: req.body.color,
         intoCal: req.body.intoCal,
-        repeated: req.body.repeated,
-        isCompleted: req.body.isCompleted,
-      }
-    )
+        users: req.body.users
+      })
       .then(() => {
         res.json({ message: "수정 성공!" })
       })
@@ -95,17 +92,6 @@ exports.scheduleAll = async (req, res) => {
       res.json({ data: scheduleall })
     })
     .catch((err) => res.status(500).send(err))
-}
-
-// 일정 완료
-exports.complete = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
-    await Schedule.findOneAndUpdate(
-      { project: req.body.project, title: req.body.title },
-      { isCompleted: true }
-    )
-    res.json({ message: "일정 완료!" })
-  }
 }
 
 exports.addUser = async (req, res) => {
