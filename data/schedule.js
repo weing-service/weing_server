@@ -24,6 +24,9 @@ const scheduleSchema = new Schema(
       type: String,
       required: true
     },
+    place: {
+      type: String
+    },
     category: {
       type: String,
     },
@@ -38,7 +41,8 @@ const scheduleSchema = new Schema(
     isCompleted: {
       type: Boolean,
       default: false
-    }
+    },
+    users: Array,
   },
   { versionKey: false }
 )
