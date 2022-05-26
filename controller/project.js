@@ -10,7 +10,8 @@ exports.createProject = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
     console.log("로그인한 유저")
     const users = []
-    const { title, info, finishDate, coverImg, profileImg } = req.body
+    const { title, info, startDate, finishDate, coverImg, profileImg } =
+      req.body
     const coverImage = await ImageModel.findOne({ savedName: coverImg })
     const profileImage = await ImageModel.findOne({ savedName: profileImg })
 
@@ -20,6 +21,7 @@ exports.createProject = async (req, res) => {
       title: title,
       info: info,
       users: users,
+      startDate: startDate,
       finishDate: finishDate,
       coverImg: coverImage,
       profileImg: profileImage,
@@ -36,8 +38,15 @@ exports.createProject = async (req, res) => {
 exports.editProject = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
     console.log("로그인한 유저")
-    const projectId = req.params.projectId
-    await ProjectModel.findByIdAndUpdate(projectId, req.body)
+    await ProjectModel.findOneAndUpdate(
+      { title: req.body.pjTitle },
+      {
+        title: req.body.title,
+        info: req.body.info,
+        startDate: req.body.startDate,
+        finishDate: req.body.finishDate,
+      }
+    )
       .then(() => {
         res.json({ message: "수정 성공!" })
       })
@@ -48,8 +57,8 @@ exports.editProject = async (req, res) => {
 // 프로젝트 삭제
 exports.delProject = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
-    const projectId = req.params.projectId
-    await ProjectModel.findByIdAndDelete(projectId).then(() => {
+    const title = req.body.title
+    await ProjectModel.findOneAndDelete({ title: title }).then(() => {
       res.json({ message: "삭제 성공!" })
     })
   }
@@ -105,8 +114,8 @@ exports.coverImg = async (req, res) => {
 
 // 프로젝트 하나 불러오기
 exports.getProject = async (req, res) => {
-  const projectId = req.params.projectId
-  const data = await ProjectModel.findById(projectId)
+  const title = req.body.title
+  const data = await ProjectModel.findOne({ title: title })
   res.json(data)
 }
 
@@ -132,12 +141,15 @@ exports.getAllProjects = async (req, res) => {
 // 참여자 추가
 exports.addUser = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
-    const projectId = req.params.projectId
-    const userId = req.params.userId
-    const newUser = await UserModel.findById(userId)
-    await ProjectModel.findByIdAndUpdate(projectId, {
-      $push: { users: newUser },
-    })
+    const title = req.body.title
+    const username = req.params.username
+    const newUser = await UserModel.findOne({ username: username })
+    await ProjectModel.findOneAndUpdate(
+      { title: title },
+      {
+        $push: { users: newUser },
+      }
+    )
     res.json({ message: "참여자 추가 완료!" })
   }
 }
@@ -145,12 +157,14 @@ exports.addUser = async (req, res) => {
 // 참여자 삭제
 exports.delUser = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
-    const projectId = req.params.projectId
-    // const userId = req.params.userId
+    const title = req.body.title
     const username = req.params.username
-    const data = await ProjectModel.findByIdAndUpdate(projectId, {
-      $pull: { users: { username: username } },
-    })
+    await ProjectModel.findOneAndUpdate(
+      { title: title },
+      {
+        $pull: { users: { username: username } },
+      }
+    )
     res.json({ message: "참여자 삭제 완료!" })
   }
 }
