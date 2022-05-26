@@ -8,7 +8,7 @@ const passport = require("passport")
 // 투표 생성
 exports.createVote = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
-    const { project, title, info, voteDate, startTime, endTime, finishDate } =
+    const { project, title, info, voteDate, startDate, endTime, finishDate } =
       req.body
     const createdDate = Date.now()
 
@@ -98,7 +98,6 @@ exports.doVote = async (req, res) => {
     })
   }
 }
-
 
 // 중간 지점 찾기
 exports.midPoint = async (req, res) => {

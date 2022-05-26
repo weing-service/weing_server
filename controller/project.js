@@ -112,11 +112,19 @@ exports.coverImg = async (req, res) => {
   }
 }
 
-// 프로젝트 하나 불러오기
+// 프로젝트 하나 불러오기 & 해당 프로젝트의 모든 일정 불러오기
 exports.getProject = async (req, res) => {
   const title = req.body.title
-  const data = await ProjectModel.findOne({ title: title })
-  res.json(data)
+  const project = await ProjectModel.findOne({ title: title })
+  const data = await ScheduleModel.find({ project: title })
+
+  const schedules = project.schedules
+
+  for (const schedule of data) {
+    schedules.push(schedule)
+  }
+
+  res.json({ data: project })
 }
 
 // 로그인한 유저의 모든 프로젝트 불러오기
@@ -127,14 +135,7 @@ exports.getAllProjects = async (req, res) => {
       users: { $elemMatch: { id: passport.session.id } },
     })
 
-    const titles = []
-
-    for (const project of projects) {
-      console.log(project.title)
-      titles.push(project.title)
-    }
-
-    res.json({ data: titles })
+    res.json({ data: projects })
   }
 }
 
