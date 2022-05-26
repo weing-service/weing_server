@@ -14,4 +14,6 @@ router.get("/one", scheduleCtrl.scheduleOne)
 // 일정 전부 불러오기
 router.get("/", scheduleCtrl.scheduleAll)
 
+router.post("/list", scheduleCtrl.addUser) // 프로젝트 참여자 목록
+
 module.exports = router
