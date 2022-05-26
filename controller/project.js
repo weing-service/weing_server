@@ -3,6 +3,7 @@ const ImageModel = require("../data/coverImg.js")
 const UserModel = require("../data/user.js")
 const ScheduleModel = require("../data/schedule.js")
 const loginCtrl = require("./middlewares")
+const passport = require("passport")
 
 // 프로젝트 생성
 exports.createProject = async (req, res) => {
@@ -107,6 +108,25 @@ exports.getProject = async (req, res) => {
   const projectId = req.params.projectId
   const data = await ProjectModel.findById(projectId)
   res.json(data)
+}
+
+// 로그인한 유저의 모든 프로젝트 불러오기
+exports.getAllProjects = async (req, res) => {
+  if (loginCtrl.isLoggedIn) {
+    console.log(passport.session.id)
+    const projects = await ProjectModel.find({
+      users: { $elemMatch: { id: passport.session.id } },
+    })
+
+    const titles = []
+
+    for (const project of projects) {
+      console.log(project.title)
+      titles.push(project.title)
+    }
+
+    res.json({ data: titles })
+  }
 }
 
 // 참여자 추가
