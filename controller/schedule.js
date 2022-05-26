@@ -68,7 +68,7 @@ exports.scheduleOne = async (req, res) => {
 
 // 일정 모두 불러오기
 exports.scheduleAll = async (req, res) => {
-  await Schedule.find()
+  await Schedule.find({project : req.body.project})
     .then((scheduleall) => {
       if (!scheduleall) return res.json({ message: "일정이 없습니다." })
       res.json({ data: scheduleall })
