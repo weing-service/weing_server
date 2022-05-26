@@ -35,8 +35,7 @@ exports.scheduleSave = async (req, res) => {
 // 일정 삭제
 exports.scheduleDelete = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
-    const scheduleId = req.params.scheduleId
-    await Schedule.findByIdAndDelete(scheduleId)
+    await Schedule.findOneAndDelete({project: req.body.project, title: req.body.title})
       .then(() => {
         res.json({ message: "삭제 성공!" })
       })
@@ -47,7 +46,18 @@ exports.scheduleDelete = async (req, res) => {
 // 일정 수정
 exports.scheduleUpdate = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
-    await Schedule.findByIdAndUpdate(req.params.scheduleId, req.body)
+    await Schedule.findOneAndUpdate({project: req.body.ex_project, title: req.body.ex_title}, 
+      {
+        project: req.body.project,
+        title: req.body.title,
+        info: req.body.info,
+        startDate: req.body.startDate,
+        finishDate: req.body.finishDate,
+        category: req.body.category,
+        intoCal: req.body.intoCal,
+        repeated: req.body.repeated,
+        isCompleted: req.body.isCompleted
+      })
       .then(() => {
         res.json({ message: "수정 성공!" })
       })
@@ -57,7 +67,7 @@ exports.scheduleUpdate = async (req, res) => {
 
 // 일정 1개 불러오기
 exports.scheduleOne = async (req, res) => {
-  await Schedule.find({ _id: req.params.scheduleId })
+  await Schedule.findOne({ project: req.body.project, title: req.body.title })
     .then((scheduleone) => {
       if (!scheduleone)
         return res.json({ message: "존재하지 않는 일정입니다." })
@@ -79,8 +89,7 @@ exports.scheduleAll = async (req, res) => {
 // 일정 완료
 exports.complete = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
-    const scheduleId = req.params.scheduleId
-    await Schedule.findByIdAndUpdate(scheduleId, { isCompleted: true })
+    await Schedule.findOneAndUpdate({project: req.body.project, title: req.body.title}, { isCompleted: true })
     res.json({ message: "일정 완료!" })
   }
 }
