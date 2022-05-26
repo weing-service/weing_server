@@ -7,8 +7,6 @@ router.post("/", scheduleCtrl.scheduleSave)
 router.delete("/", scheduleCtrl.scheduleDelete)
 // 일정 수정
 router.put("/", scheduleCtrl.scheduleUpdate)
-// 일정 완료
-router.put("/done", scheduleCtrl.complete)
 // 일정 하나만 불러오기
 router.get("/one", scheduleCtrl.scheduleOne)
 // 일정 전부 불러오기

@@ -30,15 +30,10 @@ const scheduleSchema = new Schema(
     category: {
       type: String,
     },
+    color: {
+      type: String
+    },
     intoCal: {
-      type: Boolean,
-      default: false
-    },
-    repeated: {
-      type: Boolean,
-      default: false
-    },
-    isCompleted: {
       type: Boolean,
       default: false
     },
