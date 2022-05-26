@@ -1,4 +1,5 @@
 const Schedule = require("../data/schedule")
+const Project = require("../data/project")
 const loginCtrl = require("./middlewares")
 
 // 일정 생성
@@ -13,7 +14,9 @@ exports.scheduleSave = async (req, res) => {
       category,
       intoCal,
       repeated,
+      users
     } = req.body
+    const place = ""
     const isCompleted = false
     new Schedule({
       project, //프로젝트 명
@@ -21,10 +24,12 @@ exports.scheduleSave = async (req, res) => {
       info,
       startDate,
       finishDate,
+      place,
       category,
       intoCal,
       repeated,
       isCompleted,
+      users
     }).save((err, result) => {
       if (err) return res.status(500).send(err)
       res.status(201).json(result)
@@ -57,6 +62,7 @@ exports.scheduleUpdate = async (req, res) => {
         info: req.body.info,
         startDate: req.body.startDate,
         finishDate: req.body.finishDate,
+        place: req.body.place,
         category: req.body.category,
         intoCal: req.body.intoCal,
         repeated: req.body.repeated,
@@ -99,5 +105,16 @@ exports.complete = async (req, res) => {
       { isCompleted: true }
     )
     res.json({ message: "일정 완료!" })
+  }
+}
+
+exports.addUser = async (req, res) => {
+  if (loginCtrl.isLoggedIn) {
+    await Project.findOne({ project: req.body.project })
+    .then((project) => {
+      if (!project) return res.json({ message: "해당 프로젝트가 없습니다." })
+      return res.json(project.users)
+    })
+    .catch((err) => res.status(500).send(err))
   }
 }
