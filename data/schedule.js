@@ -1,34 +1,46 @@
 const mongoose = require("mongoose")
 const { Schema } = mongoose
 
-const scheduleSchema = new Schema({
-  project: {
-    type: String,
+const scheduleSchema = new Schema(
+  {
+    project: {
+      type: String,
+      required : true
+    },
+    title: {
+      type: String,
+      maxLength: 10,
+      required: true
+    },
+    info: {
+      type: String,
+      maxLength: 50,
+    },
+    startDate: {
+      type: String,
+      required: true
+    },
+    finishDate: {
+      type: String,
+      required: true
+    },
+    category: {
+      type: String,
+    },
+    intoCal: {
+      type: Boolean,
+      default: false
+    },
+    repeated: {
+      type: Boolean,
+      default: false
+    },
+    isCompleted: {
+      type: Boolean,
+      default: false
+    }
   },
-  title: {
-    type: String,
-    length: 10,
-  },
-  info: {
-    type: String,
-    length: 50,
-  },
-  startDate: {
-    type: String,
-  },
-  finishDate: {
-    type: String,
-  },
-  category: {
-    type: String,
-  },
-  intoCal: {
-    type: Boolean,
-  },
-  repeated: {
-    type: Boolean,
-  },
-  isCompleted: Boolean,
-})
+  { versionKey: false }
+)
 
 module.exports = mongoose.model("schedule", scheduleSchema)
