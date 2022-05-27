@@ -130,9 +130,9 @@ exports.getProject = async (req, res) => {
 // 로그인한 유저의 모든 프로젝트 불러오기
 exports.getAllProjects = async (req, res) => {
   //if (loginCtrl.isLoggedIn) {
-    console.log(passport.session.id)
+    //console.log(passport.session.id)
     const projects = await ProjectModel.find({
-      users: { $elemMatch: { id: passport.session.id } },
+      users: { $elemMatch: { id: req.bdoy.id } },
     })
 
     res.json({ data: projects })

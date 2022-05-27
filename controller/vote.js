@@ -45,8 +45,8 @@ exports.createVote = async (req, res) => {
 // 투표 수정
 exports.editVote = async (req, res) => {
   //if (loginCtrl.isLoggedIn) {
-    console.log(passport.session.id)
-    await UserModel.find({ id: passport.session.id })
+    //console.log(passport.session.id)
+    await UserModel.find({ id: req.body.id })
       .then((editVote) => {
         if (!editVote) return res.json({ message: "수정할 투표 없음" })
 
@@ -64,8 +64,8 @@ exports.editVote = async (req, res) => {
 // 투표 삭제
 exports.delVote = async (req, res) => {
   //if (loginCtrl.isLoggedIn) {
-    console.log(passport.session.id)
-    UserModel.find({ id: passport.session.id }).then((delVote) => {
+    //console.log(passport.session.id)
+    UserModel.find({ id: req.body.id }).then((delVote) => {
       if (!delVote) return res.json({ message: "삭제할 투표 없음" })
       const voteId = req.params.voteId
       VoteModel.findByIdAndDelete(voteId).then(() => {
@@ -86,9 +86,9 @@ exports.getVote = async (req, res) => {
 exports.doVote = async (req, res) => {
   // req: 프로젝트 이름, 투표 이름, 투표시간(array), 투표장소(array), 몇차 투표인지(number)
   //if (loginCtrl.isLoggedIn) {
-    console.log(passport.session.id)
+    //console.log(passport.session.id)
     await Vote_infoModel.findOne({
-      user_id: passport.session.id,
+      user_id: req.body.id,
       vote_title: req.body.vote_title,
       vote_count: req.body.vote_count,
     }).then((exVote) => {
