@@ -101,7 +101,7 @@ exports.doVote = async (req, res) => {
         project_title: req.body.project_title,
         vote_title: req.body.vote_title, // 투표 제목
         vote_count: req.body.vote_count,
-        user_id: passport.session.id,
+        user_id: req.body.user_id,
         vote_time: req.body.vote_time, // 투표한 시간
         x: req.body.x, // 경도
         y: req.body.y, //위도
@@ -114,6 +114,40 @@ exports.doVote = async (req, res) => {
     }
   })
   //}
+}
+
+// 진행 중인 투표 받기
+exports.doingVote = async (req, res) => {
+  const { project_title, userId } = req.body
+  const doingVotes = await VoteModel.find({
+    project: project_title,
+    deadLine: { $gte: Date.now() },
+  })
+
+  const myVotes = await Vote_infoModel.find({
+    user_id: userId,
+    project_title: project_title,
+  })
+
+  console.log("doing", doingVotes)
+  console.log("my", myVotes)
+
+  const doneList = []
+  const doingList = []
+
+  for (let i = 0; i < doingVotes.length; i++) {
+    for (let j = 0; j < myVotes.length; j++) {
+      if (doingVotes[i].title == myVotes[j].vote_title) {
+        doneList.push(doingVotes[i])
+      }
+    }
+
+    if (!doneList.includes(doingVotes[i])) {
+      doingList.push(doingVotes[i])
+    }
+  }
+
+  res.json({ doneList: doneList, doingList: doingList })
 }
 
 // 중간 지점 찾기
@@ -235,15 +269,3 @@ exports.commonTime = async (req, res) => {
 
   //   res.json(result)
 }
-
-// 진행 중인 투표 & 완료 투표 받기
-// exports.getVoteResult = async (req, res) => {
-//   const voteLists = VoteModel.find({deadLine:
-// }
-
-// const lists = votes.find({deadline : {$gte: new Date()}})
-// const doneVotes = vote_infos.find({user_id : req.userId)
-// const a = lists.filter((x)=>x.title === doneVotes.vote_tile)
-// const b = lists.filter((x)=>x.title !== doneVotes.vote_tile)
-
-// response : {doneList : a, doingList: b}
