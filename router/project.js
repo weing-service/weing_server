@@ -18,7 +18,7 @@ router.post("/", projectCtrl.createProject) // 프로젝트 생성
 router.post("/user", projectCtrl.getAllProjects) // 로그인한 유저의 프로젝트 모두 불러오기
 router.put("/", projectCtrl.editProject) // 프로젝트 수정
 router.delete("/", projectCtrl.delProject) // 프로젝트 삭제
-router.get("/one", projectCtrl.getProject) // 프로젝트 하나 불러오기
+router.post("/one", projectCtrl.getProject) // 프로젝트 하나 불러오기
 router.get("/:project/:date", projectCtrl.countSchedule) // 예정된 일정 개수, 완료된 일정 개수 세기
 router.post("/:username", projectCtrl.addUser) // 프로젝트 팀원 추가
 router.put("/:username", projectCtrl.delUser) // 프로젝트 팀원 삭제
