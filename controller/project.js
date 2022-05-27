@@ -132,7 +132,7 @@ exports.getAllProjects = async (req, res) => {
   //if (loginCtrl.isLoggedIn) {
     //console.log(passport.session.id)
     const projects = await ProjectModel.find({
-      users: { $elemMatch: { id: req.bdoy.id } },
+      users: { $elemMatch: { id: req.body.id } },
     })
 
     res.json({ data: projects })
