@@ -17,11 +17,11 @@ const scheduleSchema = new Schema(
       maxLength: 50,
     },
     startDate: {
-      type: String,
+      type: Object,
       required: true
     },
     finishDate: {
-      type: String,
+      type: Object,
       required: true
     },
     place: {

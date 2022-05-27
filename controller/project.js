@@ -7,7 +7,7 @@ const passport = require("passport")
 
 // 프로젝트 생성
 exports.createProject = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
+  //if (loginCtrl.isLoggedIn) {
     console.log("로그인한 유저")
     const users = []
     const { title, info, startDate, finishDate, coverImg, profileImg } =
@@ -29,14 +29,14 @@ exports.createProject = async (req, res) => {
       if (err) return res.status(500).send(err)
       res.status(201).json(result)
     })
-  } else {
-    res.json({ message: "로그인 하지 않은 유저입니다." })
-  }
+  //} else {
+  //  res.json({ message: "로그인 하지 않은 유저입니다." })
+  //}
 }
 
 // 프로젝트 수정
 exports.editProject = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
+  //if (loginCtrl.isLoggedIn) {
     console.log("로그인한 유저")
     await ProjectModel.findOneAndUpdate(
       { title: req.body.pjTitle },
@@ -51,22 +51,22 @@ exports.editProject = async (req, res) => {
         res.json({ message: "수정 성공!" })
       })
       .catch((err) => res.status(500).send(err))
-  }
+  //}
 }
 
 // 프로젝트 삭제
 exports.delProject = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
+  //if (loginCtrl.isLoggedIn) {
     const title = req.body.title
     await ProjectModel.findOneAndDelete({ title: title }).then(() => {
       res.json({ message: "삭제 성공!" })
     })
-  }
+  //}
 }
 
 // 프로필 이미지 등록
 exports.profileImg = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
+  //if (loginCtrl.isLoggedIn) {
     const profileImage = req.file.path
     const data = req.file
     console.log(data)
@@ -85,12 +85,12 @@ exports.profileImg = async (req, res) => {
     if (profileImage === undefined) {
       return res.status(400).json({ message: "undefined" })
     }
-  }
+  //}
 }
 
 // 커버 이미지 등록
 exports.coverImg = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
+  //if (loginCtrl.isLoggedIn) {
     const coverImage = req.file.path
     const data = req.file
     console.log(data)
@@ -109,7 +109,7 @@ exports.coverImg = async (req, res) => {
     if (coverImage === undefined) {
       return res.status(400).json({ message: "undefined" })
     }
-  }
+  //}
 }
 
 // 프로젝트 하나 불러오기 & 해당 프로젝트의 모든 일정 불러오기
@@ -129,19 +129,19 @@ exports.getProject = async (req, res) => {
 
 // 로그인한 유저의 모든 프로젝트 불러오기
 exports.getAllProjects = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
-    console.log(passport.session.id)
+  //if (loginCtrl.isLoggedIn) {
+    //console.log(passport.session.id)
     const projects = await ProjectModel.find({
-      users: { $elemMatch: { id: passport.session.id } },
+      users: { $elemMatch: { id: req.body.id } },
     })
 
     res.json({ data: projects })
-  }
+  //}
 }
 
 // 참여자 추가
 exports.addUser = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
+  //if (loginCtrl.isLoggedIn) {
     const title = req.body.title
     const username = req.params.username
     const newUser = await UserModel.findOne({ username: username })
@@ -152,12 +152,12 @@ exports.addUser = async (req, res) => {
       }
     )
     res.json({ message: "참여자 추가 완료!" })
-  }
+  //}
 }
 
 // 참여자 삭제
 exports.delUser = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
+  //if (loginCtrl.isLoggedIn) {
     const title = req.body.title
     const username = req.params.username
     await ProjectModel.findOneAndUpdate(
@@ -167,7 +167,7 @@ exports.delUser = async (req, res) => {
       }
     )
     res.json({ message: "참여자 삭제 완료!" })
-  }
+  //}
 }
 
 // 예정된 일정 개수, 완료된 일정 개수 가져오기
