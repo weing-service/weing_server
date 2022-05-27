@@ -15,7 +15,7 @@ router.post(
 ) // 프로젝트 프로필 이미지 등록
 router.post("/coverImg", upload.single("coverImage"), projectCtrl.coverImg) // 커버 이미지 등록
 router.post("/", projectCtrl.createProject) // 프로젝트 생성
-router.get("/", projectCtrl.getAllProjects) // 로그인한 유저의 프로젝트 모두 불러오기
+router.post("/user", projectCtrl.getAllProjects) // 로그인한 유저의 프로젝트 모두 불러오기
 router.put("/", projectCtrl.editProject) // 프로젝트 수정
 router.delete("/", projectCtrl.delProject) // 프로젝트 삭제
 router.get("/one", projectCtrl.getProject) // 프로젝트 하나 불러오기
