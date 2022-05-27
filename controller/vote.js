@@ -128,9 +128,6 @@ exports.doingVote = async (req, res) => {
     project_title: project_title,
   })
 
-  console.log("doing", doingVotes)
-  console.log("my", myVotes)
-
   const doneList = []
   const doingList = []
 
@@ -190,6 +187,7 @@ exports.commonTime = async (req, res) => {
 
   let votedata = []
   let days = []
+  let tmp = []
 
   let data = {}
   let voteArr = []
@@ -208,57 +206,17 @@ exports.commonTime = async (req, res) => {
     voteArr = []
   }
 
-  console.log(data)
+  for (let i = 0; i < votes.length; i++) {
+    for (let j = 1; j < votes.length; j++) {
+      tmp.push(
+        data[days[i]][j - 1].filter((time) => data[days[i]][j].includes(time))
+      )
+    }
+  }
 
-  // for (let i = 0; i < votes.length - 1; i++) {
-  //   result[days[i]] = data[days[i]]]
-  //   // real_times[i][i].filter((x) => real_times[i][i].includes(x))
+  for (let i = 0; i < days.length; i++) {
+    result[days[i]] = tmp[i]
+  }
 
-  // }
-
-  // console.log(result[real_days[0]] = data[days])
-  // result[real_days[i]] = real_times[i][i].filter((x) =>
-  //   real_times[i + 1][i + 1].includes(x)
-  // )
-  // }
-
-  // const real_days = Object.keys(data)
-  // const real_times = Object.values(data)
-  // console.log(real_days)
-  // console.log(real_times[0][0]) // 0 0이 0 1 이랑 1 0이 1 1이랑
-
-  // for (let i = 0; i < votes.length; i++) {
-  //   for (let j = 0; j < votes.length + 1; j++) {
-  //     console.log(real_times[i][j])
-  //     console.log(real_times[i][j + 1])
-  //     console.log(
-  //       real_times[i][j].filter((x) => real_times[i][j + 1].includes(x))
-  //     )
-  //   }
-  // }
-
-  // for (let i = 0; i < votes.length; i++) {
-  //   for (let j = 0; j < votes.length; j++) {
-  //     console.log(real_times[i][j])
-  //     console.log(real_times[i][j].filter((x) => real_times[i][j].includes(x)))
-  //   }
-  // }
-
-  // for (let i = 0; i < votes.length - 1; i++) {
-  //   console.log(real_times[i])
-  //   console.log(
-  //     real_times[i][i].filter((x) => real_times[i][i].includes(x))
-  //   )
-
-  // result[real_days[i]] = real_times[i][i].filter((x) =>
-  //   real_times[i + 1][i + 1].includes(x)
-  // )
-  // }
-
-  // console.log(result)
-  // for (let i = 0; i < votedata.length - 1; i++) {
-  //   result = times[i].filter((x) => times[i + 1].includes(x))
-  // }
-
-  //   res.json(result)
+  res.json(result)
 }
