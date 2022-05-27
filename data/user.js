@@ -20,12 +20,6 @@ const userSchema = new Schema(
         },
         thumbnail_image: {
             type: String,
-        },
-        accessToken: {
-            type: String,
-        },
-        refreshToken: {
-            type: String
         }
     },
     { versionKey: false }
