@@ -2,37 +2,49 @@ const VoteModel = require("../data/vote.js")
 const UserModel = require("../data/user")
 const Vote_infoModel = require("../data/voteinfo")
 const ProjectModel = require("../data/project")
-const loginCtrl = require("./middlewares")
+//const loginCtrl = require("./middlewares")
 const passport = require("passport")
 
-// 투표 생성
 exports.createVote = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
-    const { project, title, info, voteDate, startDate, endTime, finishDate } =
-      req.body
-    const createdDate = Date.now()
+  //if (loginCtrl.isLoggedIn) {
+    const {
+      project,
+      title,
+      info,
+      startDate,
+      endDate,
+      deadLine,
+      intoCal,
+      category,
+      isPlural,
+      isAnonymous,
+      isCompleted,
+    } = req.body
 
-    if (!title) return res.status(400).send("제목을 입력해주세요!")
+    if (!title) return res.status(400).send("내용을 입력해주세요!")
 
     new VoteModel({
       project: project,
       title: title,
       info: info,
-      voteDate: voteDate,
-      startTime: startTime,
-      endTime: endTime,
-      finishDate: finishDate,
-      createdDate: createdDate,
+      startDate: startDate,
+      endDate: endDate,
+      deadLine: deadLine,
+      intoCal: intoCal,
+      category: category,
+      isPlural: isPlural,
+      isAnonymous: isAnonymous,
+      isCompleted: isCompleted,
     }).save((err, result) => {
       if (err) return res.status(500).send(err)
       res.status(201).json(result)
     })
-  }
+  //}
 }
 
 // 투표 수정
 exports.editVote = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
+  //if (loginCtrl.isLoggedIn) {
     console.log(passport.session.id)
     await UserModel.find({ id: passport.session.id })
       .then((editVote) => {
@@ -46,12 +58,12 @@ exports.editVote = async (req, res) => {
           .catch((err) => res.status(500).send(err))
       })
       .catch((err) => res.status(500).send(err))
-  }
+  //}
 }
 
 // 투표 삭제
 exports.delVote = async (req, res) => {
-  if (loginCtrl.isLoggedIn) {
+  //if (loginCtrl.isLoggedIn) {
     console.log(passport.session.id)
     UserModel.find({ id: passport.session.id }).then((delVote) => {
       if (!delVote) return res.json({ message: "삭제할 투표 없음" })
@@ -60,7 +72,7 @@ exports.delVote = async (req, res) => {
         res.json({ message: "삭제 성공!" })
       })
     })
-  }
+  //}
 }
 
 // 투표 하나 불러오기
@@ -73,10 +85,11 @@ exports.getVote = async (req, res) => {
 // 투표하기
 exports.doVote = async (req, res) => {
   // req: 프로젝트 이름, 투표 이름, 투표시간(array), 투표장소(array), 몇차 투표인지(number)
-  if (loginCtrl.isLoggedIn) {
+  //if (loginCtrl.isLoggedIn) {
     console.log(passport.session.id)
     await Vote_infoModel.findOne({
       user_id: passport.session.id,
+      vote_title: req.body.vote_title,
       vote_count: req.body.vote_count,
     }).then((exVote) => {
       if (!exVote) {
@@ -96,7 +109,7 @@ exports.doVote = async (req, res) => {
         return res.json({ message: "이미 투표 완료한 사용자입니다." })
       }
     })
-  }
+  //}
 }
 
 // 중간 지점 찾기
