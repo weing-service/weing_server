@@ -103,8 +103,7 @@ exports.doVote = async (req, res) => {
         vote_count: req.body.vote_count,
         user_id: req.body.user_id,
         vote_time: req.body.vote_time, // 투표한 시간
-        x: req.body.x, // 경도
-        y: req.body.y, //위도
+        place: req.body.place,
       }).save((err, result) => {
         if (err) return res.status(500).send(err)
         res.status(201).json(result)
@@ -210,12 +209,6 @@ exports.commonTime = async (req, res) => {
   }
 
   console.log(data)
-
-  result[days[0]] = data[days[0]]
-  result[days[1]] = data[days[1]]
-  console.log(result[days[0]])
-  console.log(result[days[1]])
-  console.log(result[days[0]].filter((x) => result[days[1]].includes(x)))
 
   // for (let i = 0; i < votes.length - 1; i++) {
   //   result[days[i]] = data[days[i]]]

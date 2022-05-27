@@ -19,8 +19,7 @@ const Vote_infoSchema = new mongoose.Schema(
       required: true,
     },
     vote_time: Object, // 투표한 시간
-    x: Number, // 경도
-    y: Number, // 위도
+    place: String,
   },
   { versionKey: false }
 )
