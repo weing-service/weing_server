@@ -4,25 +4,41 @@ const Vote_infoModel = require("../data/voteinfo")
 const ProjectModel = require("../data/project")
 const loginCtrl = require("./middlewares")
 const passport = require("passport")
+const { Router } = require("express")
 
 // 투표 생성
 exports.createVote = async (req, res) => {
   if (loginCtrl.isLoggedIn) {
-    const { project, title, info, voteDate, startDate, endTime, finishDate } =
-      req.body
-    const createdDate = Date.now()
+    const {
+      project,
+      title,
+      info,
+      startDate,
+      endDate,
+      deadLine,
+      intoCal,
+      isCompleted,
+    } = req.body
+    const projectData = await ProjectModel.findOne({ title: project })
+    const userArr = projectData.users
+    let userIds = []
 
-    if (!title) return res.status(400).send("제목을 입력해주세요!")
+    for (user of userArr) {
+      userIds.push(user.id)
+    }
+
+    if (!title) return res.status(400).send("내용을 입력해주세요!")
 
     new VoteModel({
       project: project,
       title: title,
       info: info,
-      voteDate: voteDate,
-      startTime: startTime,
-      endTime: endTime,
-      finishDate: finishDate,
-      createdDate: createdDate,
+      startDate: startDate,
+      endDate: endDate,
+      deadLine: deadLine,
+      intoCal: intoCal,
+      isCompleted: isCompleted,
+      userIds: userIds,
     }).save((err, result) => {
       if (err) return res.status(500).send(err)
       res.status(201).json(result)
@@ -106,7 +122,7 @@ exports.midPoint = async (req, res) => {
   let x_sum = 0
   let y_sum = 0
   const project = await ProjectModel.findOne({
-    title: req.params.title,
+    title: req.body.title,
   })
   const user_array = project.users
   for (const user of user_array) {
@@ -132,23 +148,101 @@ exports.midPoint = async (req, res) => {
 
 // 중복 시간대 찾기
 exports.commonTime = async (req, res) => {
-  const votedata = await Vote_infoModel.find({
+  const votes = await Vote_infoModel.find({
     project_title: req.body.project_title,
     vote_title: req.body.vote_title,
     vote_count: req.body.vote_count,
   })
-  const times = []
-  let result = []
 
-  for (const vote of votedata) {
-    times.push(vote.vote_time)
+  let votedata = []
+  let days = []
+
+  let data = {}
+  let voteArr = []
+  let result = {}
+
+  for (const vote of votes) {
+    votedata.push(vote.vote_time)
+    days = Object.keys(vote.vote_time)
   }
-  console.log(times)
-  console.log(votedata.length)
 
-  for (let i = 0; i < votedata.length - 1; i++) {
-    result = times[i].filter((x) => times[i + 1].includes(x))
+  for (let i = 0; i < days.length; i++) {
+    for (let j = 0; j < votedata.length; j++) {
+      voteArr.push(votedata[j][days[i]])
+      data[days[i]] = voteArr
+    }
+    voteArr = []
   }
 
-  res.json(result)
+  console.log(data)
+
+  result[days[0]] = data[days[0]]
+  result[days[1]] = data[days[1]]
+  console.log(result[days[0]])
+  console.log(result[days[1]])
+  console.log(result[days[0]].filter((x) => result[days[1]].includes(x)))
+
+  // for (let i = 0; i < votes.length - 1; i++) {
+  //   result[days[i]] = data[days[i]]]
+  //   // real_times[i][i].filter((x) => real_times[i][i].includes(x))
+
+  // }
+
+  // console.log(result[real_days[0]] = data[days])
+  // result[real_days[i]] = real_times[i][i].filter((x) =>
+  //   real_times[i + 1][i + 1].includes(x)
+  // )
+  // }
+
+  // const real_days = Object.keys(data)
+  // const real_times = Object.values(data)
+  // console.log(real_days)
+  // console.log(real_times[0][0]) // 0 0이 0 1 이랑 1 0이 1 1이랑
+
+  // for (let i = 0; i < votes.length; i++) {
+  //   for (let j = 0; j < votes.length + 1; j++) {
+  //     console.log(real_times[i][j])
+  //     console.log(real_times[i][j + 1])
+  //     console.log(
+  //       real_times[i][j].filter((x) => real_times[i][j + 1].includes(x))
+  //     )
+  //   }
+  // }
+
+  // for (let i = 0; i < votes.length; i++) {
+  //   for (let j = 0; j < votes.length; j++) {
+  //     console.log(real_times[i][j])
+  //     console.log(real_times[i][j].filter((x) => real_times[i][j].includes(x)))
+  //   }
+  // }
+
+  // for (let i = 0; i < votes.length - 1; i++) {
+  //   console.log(real_times[i])
+  //   console.log(
+  //     real_times[i][i].filter((x) => real_times[i][i].includes(x))
+  //   )
+
+  // result[real_days[i]] = real_times[i][i].filter((x) =>
+  //   real_times[i + 1][i + 1].includes(x)
+  // )
+  // }
+
+  // console.log(result)
+  // for (let i = 0; i < votedata.length - 1; i++) {
+  //   result = times[i].filter((x) => times[i + 1].includes(x))
+  // }
+
+  //   res.json(result)
 }
+
+// 진행 중인 투표 & 완료 투표 받기
+// exports.getVoteResult = async (req, res) => {
+//   const voteLists = VoteModel.find({deadLine:
+// }
+
+// const lists = votes.find({deadline : {$gte: new Date()}})
+// const doneVotes = vote_infos.find({user_id : req.userId)
+// const a = lists.filter((x)=>x.title === doneVotes.vote_tile)
+// const b = lists.filter((x)=>x.title !== doneVotes.vote_tile)
+
+// response : {doneList : a, doingList: b}
